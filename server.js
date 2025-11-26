@@ -19,6 +19,7 @@ let votes = { yes: 0, no: 0 };
 io.on("connection", (socket) => {
   console.log("ユーザー接続");
 
+  // コメント受信
   socket.on("comment", async (data) => {
     try {
       const decoded = await admin.auth().verifyIdToken(data.token);
@@ -28,6 +29,7 @@ io.on("connection", (socket) => {
     }
   });
 
+  // 投票受信
   socket.on("vote", (choice) => {
     votes[choice]++;
     io.emit("results", votes);
