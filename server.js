@@ -1,26 +1,28 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const authRoutes = require("./auth");
-const jwt = require("jsonwebtoken");
+const admin = require("firebase-admin");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.json());
 app.use(express.static("public"));
-app.use("/auth", authRoutes);
+
+// Firebase Admin 初期化（Render環境変数にサービスアカウントJSONを設定）
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT))
+});
 
 let votes = { yes: 0, no: 0 };
 
 io.on("connection", (socket) => {
   console.log("ユーザー接続");
 
-  socket.on("comment", (data) => {
+  socket.on("comment", async (data) => {
     try {
-      const decoded = jwt.verify(data.token, process.env.SECRET_KEY);
-      io.emit("comment", `${decoded.username}: ${data.text}`);
+      const decoded = await admin.auth().verifyIdToken(data.token);
+      io.emit("comment", `${decoded.email}: ${data.text}`);
     } catch {
       socket.emit("error", "認証エラー");
     }
