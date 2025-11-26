@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ライブコメントサイト</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>ログイン</h2>
+  <input id="username" type="text" placeholder="ユーザー名">
+  <input id="password" type="password" placeholder="パスワード">
+  <button onclick="login()">ログイン</button>
+  <button onclick="register()">新規登録</button>
+
+  <h2>コメント欄</h2>
+  <div id="comments"></div>
+  <input id="commentInput" type="text" placeholder="コメントを入力...">
+  <button onclick="sendComment()">送信</button>
+
+  <h2>アンケート</h2>
+  <button onclick="vote('yes')">賛成</button>
+  <button onclick="vote('no')">反対</button>
+  <div id="results"></div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
