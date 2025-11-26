@@ -1,21 +1,23 @@
+// Firebase SDKを読み込み
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// Firebase設定（Firebase Consoleからコピー）
+// Firebase設定（Firebase Consoleからコピーした値を必ず入れる）
 const firebaseConfig = {
   apiKey: "AIzaSyAjPP4jjWccHGaau5eG22I0HYbHp3V-ey4",
   authDomain: "live-comments-app.firebaseapp.com",
   projectId: "live-comments-app",
   storageBucket: "live-comments-app.firebasestorage.app",
-  messagingSenderId: "113751460330",
-  appId: "1:113751460330:web:b185916c9d76265fd08a93",
-  measurementId: "G-W30DCHRYQW"
+  messagingSenderId: "G-W30DCHRYQW",
+  appId: "1:113751460330:web:b185916c9d76265fd08a93"
 };
 
+// Firebase初期化
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Socket.IO接続
 const socket = io();
 let token = null;
 
@@ -27,6 +29,7 @@ window.register = async function() {
     await createUserWithEmailAndPassword(auth, email, password);
     alert("登録成功");
   } catch (err) {
+    console.error(err);
     alert("登録失敗: " + err.message);
   }
 };
@@ -37,9 +40,10 @@ window.login = async function() {
   const password = document.getElementById("password").value;
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    token = await userCredential.user.getIdToken();
+    token = await userCredential.user.getIdToken(); // JWTを取得
     alert("ログイン成功");
   } catch (err) {
+    console.error(err);
     alert("ログイン失敗: " + err.message);
   }
 };
