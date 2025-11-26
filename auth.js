@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const router = express.Router();
-const users = []; // 本番ではDBに保存すること推奨
+const users = []; // 本番ではDBに保存推奨
 
 // ユーザー登録
 router.post("/register", async (req, res) => {
