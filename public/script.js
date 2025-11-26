@@ -4,12 +4,13 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword }
 
 // Firebase設定（Firebase Consoleからコピー）
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAjPP4jjWccHGaau5eG22I0HYbHp3V-ey4",
+  authDomain: "live-comments-app.firebaseapp.com",
+  projectId: "live-comments-app",
+  storageBucket: "live-comments-app.firebasestorage.app",
+  messagingSenderId: "113751460330",
+  appId: "1:113751460330:web:b185916c9d76265fd08a93",
+  measurementId: "G-W30DCHRYQW"
 };
 
 const app = initializeApp(firebaseConfig);
