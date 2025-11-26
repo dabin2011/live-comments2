@@ -8,8 +8,8 @@ const firebaseConfig = {
   apiKey: "AIzaSyAjPP4jjWccHGaau5eG22I0HYbHp3V-ey4",
   authDomain: "live-comments-app.firebaseapp.com",
   projectId: "live-comments-app",
-  storageBucket: "live-comments-app.firebasestorage.app",
-  messagingSenderId: "G-W30DCHRYQW",
+  storageBucket: "live-comments-app.appspot.com",
+  messagingSenderId: "113751460330",
   appId: "1:113751460330:web:b185916c9d76265fd08a93"
 };
 
@@ -29,7 +29,6 @@ window.register = async function() {
     await createUserWithEmailAndPassword(auth, email, password);
     alert("登録成功");
   } catch (err) {
-    console.error(err);
     alert("登録失敗: " + err.message);
   }
 };
@@ -43,7 +42,6 @@ window.login = async function() {
     token = await userCredential.user.getIdToken(); // JWTを取得
     alert("ログイン成功");
   } catch (err) {
-    console.error(err);
     alert("ログイン失敗: " + err.message);
   }
 };
