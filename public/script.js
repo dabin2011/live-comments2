@@ -1,36 +1,50 @@
-const socket = io(); // Renderにデプロイ後は自動で接続
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Firebase設定（Firebase Consoleからコピー）
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const socket = io();
 let token = null;
 
-async function register() {
-  const username = document.getElementById("username").value;
+// 新規登録
+window.register = async function() {
+  const email = document.getElementById("username").value;
   const password = document.getElementById("password").value;
-  const res = await fetch("/auth/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
-  });
-  const data = await res.json();
-  alert(data.message);
-}
-
-async function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-  const res = await fetch("/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
-  });
-  const data = await res.json();
-  if (data.token) {
-    token = data.token;
-    alert("ログイン成功");
-  } else {
-    alert("ログイン失敗");
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    alert("登録成功");
+  } catch (err) {
+    alert("登録失敗: " + err.message);
   }
-}
+};
 
-function sendComment() {
+// ログイン
+window.login = async function() {
+  const email = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    token = await userCredential.user.getIdToken();
+    alert("ログイン成功");
+  } catch (err) {
+    alert("ログイン失敗: " + err.message);
+  }
+};
+
+// コメント送信
+window.sendComment = function() {
   const input = document.getElementById("commentInput");
   if (!token) {
     alert("ログインしてください");
@@ -38,18 +52,21 @@ function sendComment() {
   }
   socket.emit("comment", { text: input.value, token });
   input.value = "";
-}
+};
 
+// コメント受信
 socket.on("comment", (msg) => {
   const p = document.createElement("p");
   p.textContent = msg;
   document.getElementById("comments").appendChild(p);
 });
 
-function vote(choice) {
+// 投票
+window.vote = function(choice) {
   socket.emit("vote", choice);
-}
+};
 
+// 投票結果受信
 socket.on("results", (votes) => {
   document.getElementById("results").innerText =
     `賛成:${votes.yes} 反対:${votes.no}`;
